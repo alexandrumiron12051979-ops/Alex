@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 // FIX: Imported PremiumFrequency and PolicyStatus enums to fix type errors when creating dummy policy data.
 import { InsurancePolicy, PolicyType, PremiumFrequency, PolicyStatus } from './types';
 import Header from './components/Header';
@@ -11,6 +11,7 @@ const App: React.FC = () => {
     const [policies, setPolicies] = useState<InsurancePolicy[]>([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingPolicy, setEditingPolicy] = useState<InsurancePolicy | null>(null);
+    const fileInputRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
         try {
@@ -68,9 +69,75 @@ const App: React.FC = () => {
         }
     };
 
+    const handleExportPolicies = () => {
+        if (policies.length === 0) {
+            alert("There are no policies to export.");
+            return;
+        }
+        try {
+            const jsonString = JSON.stringify(policies, null, 2);
+            const blob = new Blob([jsonString], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            const date = new Date().toISOString().split('T')[0];
+            link.download = `insurtrack_backup_${date}.json`;
+            link.href = url;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        } catch (error) {
+            console.error("Failed to export policies:", error);
+            alert("An error occurred while exporting your policies.");
+        }
+    };
+
+    const handleImportClick = () => {
+        fileInputRef.current?.click();
+    };
+
+    const handleFileImport = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            try {
+                const text = e.target?.result;
+                if (typeof text !== 'string') {
+                    throw new Error("File content is not readable.");
+                }
+                const importedPolicies = JSON.parse(text);
+                
+                // Basic validation
+                if (!Array.isArray(importedPolicies) || (importedPolicies.length > 0 && !importedPolicies[0].id)) {
+                     throw new Error("Invalid file format. Please import a valid backup file.");
+                }
+                
+                if (window.confirm('Are you sure you want to import these policies? This will overwrite your current data.')) {
+                    setPolicies(importedPolicies);
+                    alert(`${importedPolicies.length} policies imported successfully.`);
+                }
+            } catch (error) {
+                console.error("Failed to import policies:", error);
+                alert(`Failed to import policies. ${error instanceof Error ? error.message : 'Unknown error'}`);
+            } finally {
+                if (event.target) {
+                    event.target.value = '';
+                }
+            }
+        };
+        reader.readAsText(file);
+    };
+
+
     return (
         <div className="min-h-screen bg-gray-100 text-gray-800 font-sans">
-            <Header onAddPolicy={() => handleOpenModal()} />
+            <Header 
+                onAddPolicy={() => handleOpenModal()} 
+                onImport={handleImportClick}
+                onExport={handleExportPolicies}
+            />
             <main className="container mx-auto p-4 md:p-8">
                 <Dashboard policies={policies} />
                 <PolicyList 
@@ -86,6 +153,13 @@ const App: React.FC = () => {
                     onSave={handleSavePolicy}
                 />
             )}
+            <input
+                type="file"
+                ref={fileInputRef}
+                onChange={handleFileImport}
+                className="hidden"
+                accept="application/json"
+            />
         </div>
     );
 };
