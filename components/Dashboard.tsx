@@ -10,9 +10,9 @@ interface DashboardProps {
 
 const SummaryCard: React.FC<{ title: string; value: string; subtext?: string }> = ({ title, value, subtext }) => (
     <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
-        <h3 className="text-sm font-medium text-slate-500 uppercase tracking-wider">{title}</h3>
-        <p className="text-3xl font-bold text-slate-800 mt-2">{value}</p>
-        {subtext && <p className="text-xs text-slate-400 mt-1">{subtext}</p>}
+        <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wider">{title}</h3>
+        <p className="text-3xl font-bold text-gray-900 mt-2">{value}</p>
+        {subtext && <p className="text-xs text-gray-400 mt-1">{subtext}</p>}
     </div>
 );
 
@@ -74,8 +74,8 @@ const Dashboard: React.FC<DashboardProps> = ({ policies }) => {
             <div className="bg-white p-6 rounded-lg shadow-md">
                 <div className="flex flex-col md:flex-row md:items-center md:justify-between">
                     <div>
-                        <h2 className="text-xl font-bold text-slate-800">AI Coverage Analysis</h2>
-                        <p className="text-slate-500 mt-1">Get personalized insights and suggestions on your insurance portfolio.</p>
+                        <h2 className="text-xl font-bold text-gray-900">AI Coverage Analysis</h2>
+                        <p className="text-gray-500 mt-1">Get personalized insights and suggestions on your insurance portfolio.</p>
                     </div>
                     <button
                         onClick={handleAnalyze}
@@ -88,7 +88,7 @@ const Dashboard: React.FC<DashboardProps> = ({ policies }) => {
                 </div>
 
                 {isLoading && (
-                    <div className="mt-6 text-center text-slate-500">
+                    <div className="mt-6 text-center text-gray-500">
                         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600 mx-auto"></div>
                         <p className="mt-2">Our AI is reviewing your policies. This may take a moment...</p>
                     </div>
@@ -96,7 +96,7 @@ const Dashboard: React.FC<DashboardProps> = ({ policies }) => {
                 {error && <div className="mt-6 text-red-600 bg-red-100 p-4 rounded-md">{error}</div>}
                 {analysis && (
                      <div 
-                        className="mt-6 prose prose-slate max-w-none prose-headings:font-semibold prose-a:text-blue-600"
+                        className="mt-6 prose prose-gray max-w-none prose-headings:font-semibold prose-a:text-indigo-600"
                         dangerouslySetInnerHTML={{ __html: analysis.replace(/\n/g, '<br />').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') }}
                     />
                 )}

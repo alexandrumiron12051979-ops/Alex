@@ -1,4 +1,3 @@
-
 export enum PolicyType {
     Auto = 'Auto',
     Health = 'Health',
@@ -32,4 +31,10 @@ export interface InsurancePolicy {
     endDate: string;
     coverageDetails?: string;
     status: PolicyStatus;
+    contractFileName?: string;
+    contractData?: string; // Base64 encoded file content
+    contractMimeType?: string; // e.g., 'image/png'
+    licensePlate?: string; // For Auto insurance
+    address?: string; // For Home insurance
+    insuredPersonName?: string; // For Health/Life insurance
 }

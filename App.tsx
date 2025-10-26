@@ -21,9 +21,9 @@ const App: React.FC = () => {
                  // Add some dummy data for first-time users
                 // FIX: Replaced string literals with enum members for 'premiumFrequency' and 'status' to conform to the InsurancePolicy type.
                 const dummyPolicies: InsurancePolicy[] = [
-                    { id: '1', provider: 'Geico', policyNumber: 'AUT123456', type: PolicyType.Auto, premium: 120, premiumFrequency: PremiumFrequency.Monthly, startDate: '2023-01-15', endDate: '2024-01-15', status: PolicyStatus.Active },
-                    { id: '2', provider: 'Blue Cross', policyNumber: 'HLT987654', type: PolicyType.Health, premium: 450, premiumFrequency: PremiumFrequency.Monthly, startDate: '2023-06-01', endDate: '2024-05-31', status: PolicyStatus.Active },
-                    { id: '3', provider: 'Lemonade', policyNumber: 'HOM654321', type: PolicyType.Home, premium: 800, premiumFrequency: PremiumFrequency.Annually, startDate: '2023-08-20', endDate: '2024-08-19', status: PolicyStatus.Active },
+                    { id: '1', provider: 'Geico', policyNumber: 'AUT123456', type: PolicyType.Auto, premium: 120, premiumFrequency: PremiumFrequency.Monthly, startDate: '2023-01-15', endDate: '2024-01-15', status: PolicyStatus.Active, licensePlate: 'ABC-1234' },
+                    { id: '2', provider: 'Blue Cross', policyNumber: 'HLT987654', type: PolicyType.Health, premium: 450, premiumFrequency: PremiumFrequency.Monthly, startDate: '2023-06-01', endDate: '2024-05-31', status: PolicyStatus.Active, insuredPersonName: 'John Doe' },
+                    { id: '3', provider: 'Lemonade', policyNumber: 'HOM654321', type: PolicyType.Home, premium: 800, premiumFrequency: PremiumFrequency.Annually, startDate: '2023-08-20', endDate: '2024-08-19', status: PolicyStatus.Active, address: '123 Main St, Anytown, USA' },
                 ];
                 setPolicies(dummyPolicies);
             }
@@ -69,7 +69,7 @@ const App: React.FC = () => {
     };
 
     return (
-        <div className="min-h-screen bg-slate-50 text-slate-800 font-sans">
+        <div className="min-h-screen bg-gray-100 text-gray-800 font-sans">
             <Header onAddPolicy={() => handleOpenModal()} />
             <main className="container mx-auto p-4 md:p-8">
                 <Dashboard policies={policies} />
